@@ -1,0 +1,174 @@
+%Start game
+dead = 0;
+
+% create sky
+close all
+fig = figure(1);
+ax = axes(fig)
+ax.XLim = [0 1000];
+ax.YLim = [0 1000];
+ax.DataAspectRatio = [1 1 1];
+ax.Color = [0.6 0.729 0.867];
+
+%create ground
+%fig3 = figure(3);
+%ay = axes(fig3);
+%ay.XLim = [-500 500];
+%ay.YLim = [-500 500];
+%ay.DataAspectRatio = [1 1 1];
+%ay.Color = [.824 .706 .549];
+
+
+%create Jet
+figtwo = figure(2);
+hblue = image(jettwo);
+hblue.XData = 500;
+hblue.YData = 500;
+hblue.Parent = ax;
+%create ground
+xground = [0 1000 1000 0 0];
+yground = [0 0 125 125 0];
+hground = fill(xground,yground,'b');
+hground.FaceColor = [.824,.706,.549];
+hground.Parent = ax;
+close(figtwo)
+%create bomb counter
+ figtwo = figure(2);
+ 
+        i = 1;
+ 
+        hbomb1 = image(bomb);
+        hbomb1.XData = 950;
+        hbomb1.YData = 950;
+        hbomb1.Parent = ax;
+        hbomb1.UserData.dropped = 0
+        
+        hbomb2 = image(bomb);
+        hbomb2.XData = 920;
+        hbomb2.YData = 950;
+        hbomb2.Parent = ax;
+        hbomb2.UserData.dropped = 0
+        
+        hbomb3 = image(bomb);
+        hbomb3.XData = 890;
+        hbomb3.YData = 950;
+        hbomb3.Parent = ax;
+        hbomb3.UserData.dropped = 0
+        
+        hbomb4 = image(bomb);
+        hbomb4.XData = 860;
+        hbomb4.YData = 950;
+        hbomb4.Parent = ax;
+        hbomb4.UserData.dropped = 0
+        
+        hbomb5 = image(bomb);
+        hbomb5.XData = 830;
+        hbomb5.YData = 950;
+        hbomb5.Parent = ax;
+        hbomb5.UserData.dropped = 0
+        
+        hbomb6 = image(bomb);
+        hbomb6.XData = 800;
+        hbomb6.YData = 950;
+        hbomb6.Parent = ax;
+        hbomb6.UserData.dropped = 0
+        
+        hbomb7 = image(bomb);
+        hbomb7.XData = 770;
+        hbomb7.YData = 950;
+        hbomb7.Parent = ax;
+        hbomb7.UserData.dropped = 0
+        
+        bombs = [hbomb1 hbomb2 hbomb3 hbomb4 hbomb5 hbomb6 hbomb7 hbomb8 hbomb9 hbomb10];
+        nexttodrop = 1; 
+        
+ close(figtwo);
+
+
+%connect controls
+%gamepad = KeyboardEmulator(fig);
+gamepad = PS3Controller('COM15');
+
+
+
+
+%% while(1)
+
+% main game loop
+
+while(dead==0)
+    
+        % PROBLEMS WITH ROTATING THE JET ACROSS THE AXIS LINE
+        %rotate the jet when buttons pushed
+        if (gamepad.isPressed(5)==1)
+            hblue.CData = imrotate(hblue.CData,90);
+            temp = hblue.XData;
+            hblue.XData = hblue.YData;
+            hblue.YData = temp;
+            pause(0.05);
+        end
+        if (gamepad.isPressed(4)==1)
+            hblue.CData = imrotate(hblue.CData,-90);
+            temp1 = hblue.XData;
+            hblue.XData = hblue.YData;
+            hblue.YData = temp1;
+            pause(0.05);
+        end
+        % creates bomb if button pushed
+        if(gamepad.isPressed(3)==1)
+        bombs(nexttodrop).XData = hblue.XData + 80;
+        bombs(nexttodrop).YData = hblue.YData;
+        bombs(nexttodrop).UserData.dropped = 1;
+        nexttodrop = nexttodrop+1;
+        pause(0.02);
+        end      
+        %move bomb  
+    
+    % moves jet with left joystick input
+    gamepad.update()
+    hblue.XData = hblue.XData + (45*gamepad.jlx);
+    hblue.YData = hblue.YData + (45*gamepad.jly);
+    for i=1:5
+      if(bombs(i).UserData.dropped == 1)
+        bombs(i).YData = bombs(i).YData - 50;
+      end
+    end
+    
+        % check for rotation input
+        
+     
+        %if 2 button = 0
+        %hblue = imrotate(jettwo,-90);
+        
+        % test to see which button is being pressed
+        %[result]=gamepad.isPressed(3)
+     
+    % check for collisions
+    if(min(hblue.YData)<125)
+    dead = 1
+    end
+    
+    
+    
+    %set(h,'XData',rotatedX(1,:),'YData',rotatedX(2,:))
+    
+    %set(h,'XData',
+    
+    pause(0.01);
+    
+    
+end
+  
+% add "If plane is still alive (hasn't bombed building, hasn't been hit by
+% missile)" right after the while one
+
+%% if (
+
+% update graphics
+
+%Controller Control
+
+
+
+        % if missile location = plane location, missile = missile + 1
+    
